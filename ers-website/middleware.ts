@@ -1,11 +1,24 @@
 import { NextResponse } from "next/server";
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { createServerClient } from "@supabase/ssr";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
 
-  const supabase = createMiddlewareClient({ req, res });
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => req.cookies.getAll(),
+        setAll: (cookies) => {
+          cookies.forEach(({ name, value, options }) =>
+            res.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
 
   const {
     data: { user },
@@ -13,7 +26,7 @@ export async function middleware(req: NextRequest) {
 
   const url = req.nextUrl.clone();
 
-  // 🚫 Not logged in → block protected routes
+  // 🚫 Not logged in
   if (!user) {
     if (
       url.pathname.startsWith("/client") ||
@@ -22,7 +35,6 @@ export async function middleware(req: NextRequest) {
       url.pathname = "/auth/login";
       return NextResponse.redirect(url);
     }
-
     return res;
   }
 
