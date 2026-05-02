@@ -2,23 +2,16 @@
 
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function RoleSelect() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
-  const setRole = async (role: "client" | "runner") => {
-    setLoading(true);
-
+  const selectRole = async (role: "client" | "runner") => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      router.push("/auth/login");
-      return;
-    }
+    if (!user) return;
 
     const { error } = await supabase
       .from("profiles")
@@ -27,44 +20,34 @@ export default function RoleSelect() {
 
     if (error) {
       alert(error.message);
-      setLoading(false);
       return;
     }
 
-    // Redirect immediately after selection
-    if (role === "client") router.push("/client");
-    if (role === "runner") router.push("/runner");
+    // redirect after role selection
+    if (role === "client") {
+      router.push("/client/dashboard");
+    } else {
+      router.push("/runner/dashboard");
+    }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0f172a",
-        color: "white",
-        flexDirection: "column",
-      }}
-    >
-      <h2 style={{ marginBottom: 20 }}>How do you want to use ERS?</h2>
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0F14] text-white">
+      <div className="p-8 bg-[#111827] rounded-xl w-[350px]">
+        <h2 className="text-xl mb-4">Choose your role</h2>
 
-      <div style={{ display: "flex", gap: 20 }}>
         <button
-          disabled={loading}
-          onClick={() => setRole("client")}
-          style={{ padding: 20, width: 200 }}
+          onClick={() => selectRole("client")}
+          className="w-full mb-3 p-3 bg-green-500 rounded"
         >
           I need errands done
         </button>
 
         <button
-          disabled={loading}
-          onClick={() => setRole("runner")}
-          style={{ padding: 20, width: 200 }}
+          onClick={() => selectRole("runner")}
+          className="w-full p-3 bg-green-700 rounded"
         >
-          I want to earn money
+          I want to earn (Runner)
         </button>
       </div>
     </div>

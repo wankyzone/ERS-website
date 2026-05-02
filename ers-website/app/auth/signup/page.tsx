@@ -22,6 +22,16 @@ export default function Signup() {
 
     alert("Account created. You can now log in.");
     router.push("/auth/login");
+
+    const user = data.user;
+
+    if (user) {
+      await supabase.from("profiles").insert({
+        id: user.id,
+        email: user.email,
+        role: null, // important 
+      });
+    }
   };
 
   return (
