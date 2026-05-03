@@ -1,21 +1,17 @@
-import { supabase } from "../supabase";
+import { supabase } from "@/lib/supabase";
 
 export async function resolveUserRoute() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
 
-  if (!user) return "/auth/login";
+  if (!data.user) return "/auth/login";
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
-    .eq("id", user.id)
+    .eq("id", data.user.id)
     .single();
 
-  if (!profile?.role) {
-    return "/onboarding/role-select";
-  }
+  if (!profile?.role) return "/onboarding/role-select";
 
   if (profile.role === "client") return "/client/dashboard";
   if (profile.role === "runner") return "/runner/dashboard";

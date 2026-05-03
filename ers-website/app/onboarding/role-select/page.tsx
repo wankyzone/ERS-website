@@ -3,27 +3,26 @@
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
-export default function RoleSelect() {
+export default function RoleSelectPage() {
   const router = useRouter();
 
   const selectRole = async (role: "client" | "runner") => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
 
-    if (!user) return;
+    if (!data.user) {
+      return alert("Not logged in");
+    }
 
     const { error } = await supabase
       .from("profiles")
       .update({ role })
-      .eq("id", user.id);
+      .eq("id", data.user.id);
 
     if (error) {
       alert(error.message);
       return;
     }
 
-    // redirect after role selection
     if (role === "client") {
       router.push("/client/dashboard");
     } else {
@@ -32,24 +31,22 @@ export default function RoleSelect() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0F14] text-white">
-      <div className="p-8 bg-[#111827] rounded-xl w-[350px]">
-        <h2 className="text-xl mb-4">Choose your role</h2>
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+      <h1 className="text-2xl mb-6">Select Your Role</h1>
 
-        <button
-          onClick={() => selectRole("client")}
-          className="w-full mb-3 p-3 bg-green-500 rounded"
-        >
-          I need errands done
-        </button>
+      <button
+        onClick={() => selectRole("client")}
+        className="mb-3 bg-green-600 px-4 py-2 rounded"
+      >
+        I'm a Client
+      </button>
 
-        <button
-          onClick={() => selectRole("runner")}
-          className="w-full p-3 bg-green-700 rounded"
-        >
-          I want to earn (Runner)
-        </button>
-      </div>
+      <button
+        onClick={() => selectRole("runner")}
+        className="bg-blue-600 px-4 py-2 rounded"
+      >
+        I'm a Runner
+      </button>
     </div>
   );
 }

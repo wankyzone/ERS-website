@@ -1,72 +1,74 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { resolveUserRoute } from "@/lib/auth/resolver";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function LoginPage() {
   const router = useRouter();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async () => {
-    const { error } = await signIn(email, password);
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
 
     if (error) {
       alert(error.message);
       return;
     }
 
-    const route = await resolveUserRoute();
-    router.push(route);
+    // 🔥 get role
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    if (!profile?.role) {
+      router.push("/onboarding/role-select");
+    } else if (profile.role === "client") {
+      router.push("/client/dashboard");
+    } else if (profile.role === "runner") {
+      router.push("/runner/dashboard");
+    }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0f172a",
-        color: "white",
-      }}
-    >
-      {/* LOGIN CARD */}
-      <div
-        style={{
-          padding: 24,
-          background: "#111827",
-          borderRadius: 12,
-          width: 300,
-        }}
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+      <h1 className="text-2xl mb-4">Login</h1>
+
+      <input
+        type="email"
+        placeholder="Email"
+        className="mb-2 p-2 rounded text-black"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        className="mb-2 p-2 rounded text-black"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <button
+        onClick={handleLogin}
+        disabled={loading}
+        className="bg-green-600 px-4 py-2 rounded"
       >
-        <h2>ERS Login</h2>
-
-        <input
-          placeholder="Email"
-          style={{ width: "100%", marginBottom: 10 }}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          placeholder="Password"
-          type="password"
-          style={{ width: "100%", marginBottom: 10 }}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button onClick={handleLogin} style={{ width: "100%" }}>
-          Login
-        </button>
-      </div>
-
-      {/* SIGNUP LINK */}
-      <p style={{ marginTop: 12 }}>
-        No account? <a href="/auth/signup">Create one</a>
-      </p>
+        {loading ? "Logging in..." : "Login"}
+      </button>
     </div>
   );
 }
