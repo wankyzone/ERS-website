@@ -2,8 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #0B0B0F;
+  --surface: #111217;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #1ED760;
+}
+
+/* Base */
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: #0B0B0F;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* Surfaces (cards, sections) */
+.surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* Text hierarchy */
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+/* Accent usage */
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-accent {
+  background: var(--accent);
+}
+
+/* Text selection (small but premium) */
+
+::selection {
+  background: rgba(30, 215, 96, 0.3);
+  color: white;
+}
+
+/* Scrollbar (subtle polish) */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 215, 96, 0.4);
 }
 
 /* Glow utilities */
@@ -12,14 +70,31 @@ body {
   box-shadow: 0 0 40px rgba(30, 215, 96, 0.25);
 }
 
+.glow-strong {
+  box-shadow: 0 0 80px rgba(30, 215, 96, 0.35);
+}
+
 .glow-text {
   text-shadow: 0 0 20px rgba(30, 215, 96, 0.6);
 }
+
+/* Gradient background */
 
 .gradient-bg {
   background: radial-gradient(
     circle at top,
     rgba(30, 215, 96, 0.15),
     transparent 40%
+  );
+}
+
+/* Subtle section divider (use when needed) */
+
+.section-divider {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
   );
 }

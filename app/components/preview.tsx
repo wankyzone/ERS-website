@@ -7,47 +7,70 @@ export default function Preview() {
   return (
     <section className="py-32 px-6 relative overflow-hidden">
 
-      {/* Background image */}
-      <div className="absolute inset-0 opacity-20">
+      {/* Background */}
+      <div className="absolute inset-0">
         <Image
-          src="/lagos-map.png" // ✅ FIXED PATH
+          src="/lagos-map.png"
           alt="Map of Lagos"
           fill
-          className="object-cover"
+          className="object-cover opacity-15"
           priority
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg)] via-transparent to-[var(--bg)]" />
       </div>
 
       <div className="max-w-6xl mx-auto text-center relative z-10">
 
-        <h2 className="text-3xl md:text-4xl font-bold mb-12">
+        {/* Heading */}
+        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-16">
           See ERS in action
         </h2>
 
-        {/* Floating UI */}
+        {/* Floating Phone */}
         <motion.div
-          initial={{ opacity: 0, y: 80, scale: 0.9 }}
+          initial={{ opacity: 0, y: 80, scale: 0.95 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mx-auto max-w-md rounded-2xl bg-[#0B0B0F] border border-white/10 p-4 shadow-[0_0_60px_rgba(30,215,96,0.2)]"
+          className="mx-auto relative"
         >
-          <div className="space-y-4">
+          {/* Subtle glow (REDUCED) */}
+          <div className="absolute inset-0 blur-3xl bg-[var(--accent)] opacity-10 rounded-full scale-125"></div>
 
-            <div className="text-left">
-              <p className="text-sm text-gray-400">Errand</p>
-              <h3 className="font-semibold">Pick up groceries</h3>
+          {/* Phone */}
+          <div className="relative w-[280px] mx-auto rounded-[40px] border border-white/10 bg-black/80 p-3 backdrop-blur-xl">
+
+            {/* Screen */}
+            <div className="rounded-[30px] bg-black/40 p-4 space-y-4">
+
+              {/* Header */}
+              <div>
+                <p className="text-xs text-secondary">Errand</p>
+                <h3 className="text-sm font-semibold">
+                  Pick up groceries
+                </h3>
+              </div>
+
+              {/* Map */}
+              <div className="h-28 rounded-xl overflow-hidden relative">
+                <Image
+                  src="/lagos-map.png"
+                  alt="Live tracking"
+                  fill
+                  className="object-cover opacity-60"
+                />
+                <div className="absolute inset-0 flex items-center justify-center text-xs text-white/70">
+                  Live tracking
+                </div>
+              </div>
+
+              {/* Status */}
+              <div className="flex justify-between text-xs">
+                <span className="text-secondary">Runner</span>
+                <span className="text-accent">Assigned</span>
+              </div>
+
             </div>
-
-            <div className="h-32 bg-[#1ED760]/10 rounded-lg flex items-center justify-center text-sm text-gray-400">
-              Live tracking...
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Runner</span>
-              <span className="text-[#1ED760]">Assigned</span>
-            </div>
-
           </div>
         </motion.div>
 
