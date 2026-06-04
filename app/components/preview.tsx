@@ -1,80 +1,206 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { MapPin, Star, Clock, MessageCircle, Phone } from "lucide-react";
 
 export default function Preview() {
+  const [distance, setDistance] = useState(2.3);
+  const [eta, setEta] = useState(12);
+  const [progress, setProgress] = useState(40);
+  const [step, setStep] = useState(0);
+
+  const steps = [
+    "Runner accepted",
+    "En route to pickup",
+    "Item picked up",
+    "Heading to delivery",
+    "Delivered",
+  ];
+
+  // Simulate movement
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDistance((d) => Math.max(0, +(d - 0.2).toFixed(1)));
+      setEta((t) => Math.max(1, t - 1));
+      setProgress((p) => Math.min(100, p + 10));
+      setStep((s) => Math.min(steps.length - 1, s + 1));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section className="py-32 px-6 relative overflow-hidden">
+    <section className="py-28 px-6 relative overflow-hidden">
 
-      {/* Background */}
-      <div className="absolute inset-0">
-        <Image
-          src="/lagos-map.png"
-          alt="Map of Lagos"
-          fill
-          className="object-cover opacity-15"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg)] via-transparent to-[var(--bg)]" />
-      </div>
+      {/* Glow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#1ED760]/5 via-transparent to-[#1ED760]/5" />
 
-      <div className="max-w-6xl mx-auto text-center relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="max-w-6xl mx-auto text-center relative z-10"
+      >
 
-        {/* Heading */}
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-16">
-          See ERS in action
+        <p className="text-xs tracking-widest text-[#1ED760] mb-4">
+          SEE IT IN ACTION
+        </p>
+
+        <h2 className="text-4xl md:text-5xl font-bold">
+          Your errand, handled.
         </h2>
 
-        {/* Floating Phone */}
-        <motion.div
-          initial={{ opacity: 0, y: 80, scale: 0.95 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mx-auto relative"
-        >
-          {/* Subtle glow (REDUCED) */}
-          <div className="absolute inset-0 blur-3xl bg-[var(--accent)] opacity-10 rounded-full scale-125"></div>
+        <p className="text-gray-400 mt-4">
+          From posting to completion — every step in real-time.
+        </p>
 
-          {/* Phone */}
-          <div className="relative w-[280px] mx-auto rounded-[40px] border border-white/10 bg-black/80 p-3 backdrop-blur-xl">
+        <div className="mt-16 grid md:grid-cols-3 gap-6 items-center">
 
-            {/* Screen */}
-            <div className="rounded-[30px] bg-black/40 p-4 space-y-4">
+          {/* LEFT */}
+          <div className="space-y-4 text-left">
 
-              {/* Header */}
-              <div>
-                <p className="text-xs text-secondary">Errand</p>
-                <h3 className="text-sm font-semibold">
-                  Pick up groceries
-                </h3>
-              </div>
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="bg-[#111217] border border-white/10 p-4 rounded-xl"
+            >
+              <p className="text-green-400 text-sm">✓ Runner Assigned</p>
+              <p className="text-white font-medium mt-1">Emeka O.</p>
+              <p className="text-gray-400 text-sm flex items-center gap-1">
+                <Star size={14} /> 4.9 · 312 runs
+              </p>
+            </motion.div>
 
-              {/* Map */}
-              <div className="h-28 rounded-xl overflow-hidden relative">
-                <Image
-                  src="/lagos-map.png"
-                  alt="Live tracking"
-                  fill
-                  className="object-cover opacity-60"
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-[#111217] border border-white/10 p-4 rounded-xl"
+            >
+              <p className="text-gray-400 text-sm flex items-center gap-2">
+                <Clock size={14} /> Estimated arrival
+              </p>
+
+              <p className="text-white text-xl font-bold mt-2">
+                {eta} min
+              </p>
+
+              <div className="h-1 bg-white/10 rounded-full mt-2">
+                <div
+                  className="h-1 bg-[#1ED760] rounded-full transition-all duration-700"
+                  style={{ width: `${progress}%` }}
                 />
-                <div className="absolute inset-0 flex items-center justify-center text-xs text-white/70">
-                  Live tracking
-                </div>
+              </div>
+            </motion.div>
+
+          </div>
+
+          {/* CENTER */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-[#111217] border border-white/10 rounded-2xl p-6 text-left relative hover:scale-[1.02] transition-all duration-300 shadow-[0_0_60px_rgba(30,215,96,0.15)]"
+          >
+
+            <div className="flex justify-between items-center">
+              <p className="text-white font-semibold">Track Errand</p>
+
+              <span className="flex items-center gap-2 text-xs bg-green-500/10 text-green-400 px-2 py-1 rounded-full">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                In Progress
+              </span>
+            </div>
+
+            <p className="text-gray-400 text-sm mt-2">
+              Pick up dry cleaning from Island Laundry
+            </p>
+
+            {/* Map */}
+            <div className="mt-4 h-40 bg-black/30 rounded-lg relative overflow-hidden">
+              <div className="absolute inset-0 grid grid-cols-4 gap-2 p-4 opacity-20">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div key={i} className="bg-white/10 rounded"></div>
+                ))}
               </div>
 
-              {/* Status */}
-              <div className="flex justify-between text-xs">
-                <span className="text-secondary">Runner</span>
-                <span className="text-accent">Assigned</span>
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="absolute top-12 left-8 w-28 h-28 border border-dashed border-green-400 rounded-full opacity-60"
+              />
+            </div>
+
+            {/* Status */}
+            <div className="mt-4 flex items-center justify-between">
+
+              <div>
+                <p className="text-white text-sm">
+                  {distance > 0
+                    ? "Emeka is on the way"
+                    : "Arriving now"}
+                </p>
+
+                <p className="text-gray-400 text-xs">
+                  {distance} km away · arriving soon
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <button className="p-2 border border-white/10 rounded-lg">
+                  <MessageCircle size={16} />
+                </button>
+                <button className="p-2 bg-[#1ED760] text-black rounded-lg">
+                  <Phone size={16} />
+                </button>
               </div>
 
             </div>
-          </div>
-        </motion.div>
 
-      </div>
+          </motion.div>
+
+          {/* RIGHT */}
+          <div className="space-y-4 text-left">
+
+            <div className="bg-[#111217] border border-white/10 p-4 rounded-xl">
+              <p className="text-gray-400 text-sm">Errand details</p>
+
+              <p className="text-white mt-2 flex items-center gap-2 text-sm">
+                <MapPin size={14} />
+                Victoria Island, Lagos
+              </p>
+
+              <div className="flex justify-between mt-3 text-sm">
+                <span className="text-gray-400">Est. cost</span>
+                <span className="text-[#1ED760] font-semibold">₦850</span>
+              </div>
+            </div>
+
+            <div className="bg-[#111217] border border-white/10 p-4 rounded-xl">
+              <p className="text-gray-400 text-sm mb-2">Live updates</p>
+
+              <ul className="space-y-2 text-sm">
+                {steps.map((s, i) => (
+                  <li
+                    key={i}
+                    className={
+                      i <= step
+                        ? "text-green-400"
+                        : "text-gray-500"
+                    }
+                  >
+                    • {s}
+                  </li>
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </motion.div>
     </section>
   );
 }
