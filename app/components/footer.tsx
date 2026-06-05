@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 py-16 px-6">
+    <footer className="border-t border-white/10 pt-16 pb-10 px-6 bg-[#0B0D12]">
 
       <div className="max-w-6xl mx-auto">
 
@@ -11,7 +13,7 @@ export default function Footer() {
 
           {/* BRAND */}
           <div>
-            <h2 className="text-lg font-semibold text-white mb-4">
+            <h2 className="text-xl font-bold text-white mb-4">
               ERS
             </h2>
 
@@ -25,7 +27,7 @@ export default function Footer() {
               {["X", "in", "f"].map((s, i) => (
                 <div
                   key={i}
-                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition cursor-pointer"
                 >
                   {s}
                 </div>
@@ -39,10 +41,10 @@ export default function Footer() {
               Product
             </h3>
             <div className="flex flex-col gap-3 text-sm text-gray-400">
-              <a href="#" className="hover:text-white transition">How it works</a>
-              <a href="#" className="hover:text-white transition">For Runners</a>
-              <a href="#" className="hover:text-white transition">Pricing</a>
-              <a href="#" className="hover:text-white transition">Safety</a>
+              <Link href="/" className="hover:text-white">How it works</Link>
+              <Link href="/" className="hover:text-white">For Runners</Link>
+              <Link href="/" className="hover:text-white">Pricing</Link>
+              <Link href="/" className="hover:text-white">Safety</Link>
             </div>
           </div>
 
@@ -52,10 +54,10 @@ export default function Footer() {
               Company
             </h3>
             <div className="flex flex-col gap-3 text-sm text-gray-400">
-              <a href="#" className="hover:text-white transition">About</a>
-              <a href="#" className="hover:text-white transition">Blog</a>
-              <a href="#" className="hover:text-white transition">Careers</a>
-              <a href="#" className="hover:text-white transition">Press</a>
+              <Link href="/" className="hover:text-white">About</Link>
+              <Link href="/" className="hover:text-white">Blog</Link>
+              <Link href="/" className="hover:text-white">Careers</Link>
+              <Link href="/" className="hover:text-white">Press</Link>
             </div>
           </div>
 
@@ -65,24 +67,38 @@ export default function Footer() {
               Legal
             </h3>
             <div className="flex flex-col gap-3 text-sm text-gray-400">
-              <a href="#" className="hover:text-white transition">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition">Terms of Service</a>
-              <a href="#" className="hover:text-white transition">Cookie Policy</a>
+              <Link href="/privacy-policy" className="hover:text-white">
+                Privacy Policy
+              </Link>
+              <Link href="/terms-of-service" className="hover:text-white">
+                Terms of Service
+              </Link>
+              <Link href="/cookie-policy" className="hover:text-white">
+                Cookie Policy
+              </Link>
             </div>
           </div>
 
         </div>
 
-        {/* BOTTOM BAR */}
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+        {/* DIVIDER */}
+        <div className="mt-12 border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
 
           <p>
-            © {new Date().getFullYear()} ERS — Errand Runners System. Made in Lagos 🇳🇬
+            © {new Date().getFullYear()} ERS — Errand Runners System.
           </p>
 
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            <span>All systems operational</span>
+          {/* LEGAL INLINE LINKS (Glovo-style) */}
+          <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm">
+            <Link href="/terms-of-service" className="hover:text-white">
+              Terms
+            </Link>
+            <Link href="/privacy-policy" className="hover:text-white">
+              Privacy
+            </Link>
+            <Link href="/cookie-policy" className="hover:text-white">
+              Cookies
+            </Link>
           </div>
 
         </div>

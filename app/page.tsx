@@ -12,30 +12,27 @@ import Trust from "./components/trust";
 import CTA from "./components/cta";
 import Footer from "./components/footer";
 
+/**
+ * `task` state is intentionally co-located here because only Hero + Categories
+ * share it. If the app grows, promote this to a React context or Zustand store.
+ */
 export default function Page() {
   const [task, setTask] = useState("");
 
   return (
-    <main className="bg-[#0B0D12] text-white">
-
+    <main className="bg-[#0B0D12] text-white overflow-x-hidden">
       <Navbar />
 
+      {/* Task state scoped to the "find a runner" flow */}
       <Hero task={task} setTask={setTask} />
-
       <Categories setTask={setTask} />
 
       <Problem />
-
       <Solution />
-
       <HowItWorks />
-
       <Trust />
-
       <CTA />
-
       <Footer />
-
     </main>
   );
 }
