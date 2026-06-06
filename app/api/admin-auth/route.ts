@@ -1,30 +1,12 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
-  try {
-    const { password } = await req.json();
+  const { password } = await req.json();
 
-    if (!password) {
-      return NextResponse.json({ ok: false }, { status: 400 });
-    }
-
-    const hash = process.env.ADMIN_PASSWORD_HASH;
-
-    if (!hash) {
-      return NextResponse.json({ ok: false }, { status: 500 });
-    }
-
-    const valid = await bcrypt.compare(password, hash);
-
-    if (!valid) {
-      return NextResponse.json({ ok: false }, { status: 401 });
-    }
-
+  if (password === process.env.ADMIN_PASSWORD) {
     const res = NextResponse.json({ ok: true });
 
-    // 🍪 Set secure cookie
-    res.cookies.set("admin_auth", "true", {
+    res.cookies.set("ers_admin", "true", {
       httpOnly: true,
       secure: true,
       path: "/",
@@ -32,7 +14,7 @@ export async function POST(req: Request) {
     });
 
     return res;
-  } catch {
-    return NextResponse.json({ ok: false }, { status: 400 });
   }
+
+  return NextResponse.json({ ok: false }, { status: 401 });
 }
